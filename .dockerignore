@@ -1,0 +1,31 @@
+# ── Git ──────────────────────────────────────
+.git
+.gitignore
+.github
+
+# ── Maven build output (dùng multi-stage nên không cần) ──
+target/
+
+# ── IDE / OS ─────────────────────────────────
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# ── Docker files (không cần bên trong image) ─
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# ── Env & secrets ────────────────────────────
+.env
+.env.*
+
+# ── Logs & temp ──────────────────────────────
+*.log
+logs/
+*.tmp
+
+# ── Docs ─────────────────────────────────────
+README.md

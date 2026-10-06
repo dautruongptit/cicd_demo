@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://100.106.5.35:3306/event_app?useSSL=false&serverTimezone=Asia/Ho_Chi_Minh&allowPublicKeyRetrieval=true}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      pool-name: HikariPool-demo-app
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:none}
+    show-sql: false
+
+# ── Actuator prod: chỉ mở health ────────────
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always                # ẩn chi tiết với anonymous
+  info:
+    env:
+      enabled: true
+# ── Logging prod: ghi file, ít noise ────────
+logging:
+  level:
+    root: WARN
+    com.demo.app: INFO
+    org.hibernate.SQL: WARN
+    org.springframework.web: WARN
