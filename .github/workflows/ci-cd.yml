@@ -129,3 +129,16 @@ jobs:
             sleep 8
             docker compose ps
             echo "✅ Deployment complete — ${{ github.sha }}"
+
+      - name: Send Telegram Notification
+        uses: appleboy/telegram-action@master
+        if: always() # Luôn chạy bước này dù deploy thành công hay thất bại
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            ${{ job.status == 'success' && '✅' || '❌' }} Deploy to VPS Status: ${{ job.status }}
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit Message: ${{ github.event.head_commit.message }}
+            Author: ${{ github.actor }}
