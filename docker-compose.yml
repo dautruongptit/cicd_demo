@@ -3,7 +3,7 @@ services:
     image: ${IMAGE_NAME}
     container_name: demo-cicd
     ports:
-      - "8080:8080"
+      - "8082:8082"
     env_file:
       - .env
     environment:
@@ -18,49 +18,8 @@ services:
     networks:
       - shared-network
     restart: unless-stopped
-    depends_on:
-      mysql:
-        condition: service_healthy
-
-  mysql:
-    image: mysql:8.0
-    container_name: mysql   # thêm dòng này
-    ports:
-      - "3306:3306"
-    env_file:
-      - .env
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      TZ: ${TZ}
-    volumes:
-      - mysql-data:/var/lib/mysql
-      - mysql-logs:/var/log/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    networks:
-      - shared-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost",
-             "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
 
 volumes:
-  mysql-data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /data/mysql
-  mysql-logs:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /data/mysql-logs
   app-logs:
     driver: local
     driver_opts:
