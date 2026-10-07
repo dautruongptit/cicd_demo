@@ -110,7 +110,7 @@ jobs:
             set -e
 
             # ── 1. Vào thư mục project trên VPS ──────────────
-            cd ${{ secrets.DEPLOY_DIR }}
+            cd /media/mos/Data2/DeployUbuntu/demo_cicid
 
             # ── 2. Cập nhật IMAGE_NAME trong .env ────────────
             NEW_IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/demo-cicd:${{ github.sha }}"
