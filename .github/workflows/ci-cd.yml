@@ -117,20 +117,21 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           
-          ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" bash -s << 'EOF'
+          NEW_IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/demo-cicd:${{ github.sha }}"
+          
+          ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "
             set -e
             cd /media/mos/Data2/DeployUbuntu/cicd_demo
-            NEW_IMAGE="${DOCKERHUB_USERNAME}/demo-cicd:${COMMIT_SHA}"
-            sed -i "s|IMAGE_NAME=.*|IMAGE_NAME=${NEW_IMAGE}|" .env
-            echo "✅ IMAGE_NAME updated → ${NEW_IMAGE}"
+            sed -i 's|IMAGE_NAME=.*|IMAGE_NAME=${NEW_IMAGE}|' .env
+            echo '✅ IMAGE_NAME updated → ${NEW_IMAGE}'
             docker compose pull
             docker compose up -d --remove-orphans
-            echo "✅ Containers restarted"
+            echo '✅ Containers restarted'
             docker image prune -f
             sleep 8
             docker compose ps
-            echo "✅ Deployment complete"
-          EOF
+            echo '✅ Deployment complete'
+          "
 
       - name: Send Telegram Notification
         uses: appleboy/telegram-action@master
